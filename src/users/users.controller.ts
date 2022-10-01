@@ -1,5 +1,5 @@
 import { Controller, Post, Req, Res } from '@nestjs/common';
-import { UsersService } from 'src/service/users.service';
+import { UsersService } from 'src/users/users.service';
 import { checkPassword } from 'utils/hash';
 
 @Controller('admin')
@@ -41,5 +41,12 @@ export class UsersController {
     } else {
       return res.status(401).redirect('/login.html?error=Incorrect+Username');
     }
+  }
+
+  @Post('logout')
+  logout(@Req() req) {
+    req.session.destroy(() => {
+      console.log('User logged out');
+    });
   }
 }

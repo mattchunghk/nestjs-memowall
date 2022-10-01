@@ -5,8 +5,11 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { UsersController } from './controller/users.controller';
-import { UsersService } from './service/users.service';
+
+import { UsersService } from './users/users.service';
+import { MemosController } from './memos/memos.controller';
+import { MemosService } from './memos/memos.service';
+import { UsersController } from './users/users.controller';
 console.log(join(__dirname, '...', 'public'));
 @Module({
   imports: [
@@ -27,7 +30,7 @@ console.log(join(__dirname, '...', 'public'));
       },
     }),
   ],
-  controllers: [AppController, UsersController],
-  providers: [AppService, UsersService],
+  controllers: [AppController, UsersController, MemosController],
+  providers: [AppService, UsersService, MemosService],
 })
 export class AppModule {}
