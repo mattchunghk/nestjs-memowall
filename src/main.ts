@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
+import * as fs from 'fs';
+import { join } from 'path';
 
 declare module 'express-session' {
   interface SessionData {
@@ -26,3 +28,12 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+export async function deletedImg(filename: string) {
+  fs.unlink(
+    `${join(__dirname, '..', '..', 'public', 'uploads', filename)}`,
+    (err) => {
+      if (err) console.log('delete img error');
+    },
+  );
+}

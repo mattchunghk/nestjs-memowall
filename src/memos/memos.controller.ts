@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -11,12 +12,13 @@ import {
 } from '@nestjs/common';
 import { formParse } from 'utils/upload';
 import { MemosService } from './memos.service';
+import { Response, Request } from 'express';
 
 @Controller('memo')
 export class MemosController {
   constructor(private readonly memosService: MemosService) {}
   @Get()
-  async loadMemos(@Res() res) {
+  async loadMemos(@Res() res: Response) {
     try {
       const memos = await this.memosService.getMemos();
       res.status(200).json(memos);
@@ -26,7 +28,7 @@ export class MemosController {
   }
 
   @Post('memo-formidable')
-  async uploadMemos(@Res() res, @Req() req) {
+  async uploadMemos(@Res() res: Response, @Req() req: Request) {
     try {
       const obj: any = await formParse(req);
 
@@ -36,8 +38,23 @@ export class MemosController {
       res.status(400).send(error);
     }
   }
+
+  @Put('like')
+  async likedMemos(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Query() query: { id: number },
+  ) {
+    try {
+      await this.memosService.likeMemos(query.id, req.session.useId);
+      res.end('success');
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
+
   @Put('update')
-  async updateMemos(@Res() res, @Req() req, @Query() query) {
+  async updateMemos(@Res() res: Response, @Req() req: Request, @Query() query) {
     try {
       await this.memosService.updateMemos(query.id, query.update);
       res.end('success');
@@ -47,7 +64,7 @@ export class MemosController {
   }
 
   @Delete('delete/id/:id')
-  async deleteMemos(@Res() res, @Req() req, @Param('id') id) {
+  async deleteMemos(@Res() res: Response, @Param('id') id: number) {
     try {
       await this.memosService.deleteMemos(id);
       res.end('success');

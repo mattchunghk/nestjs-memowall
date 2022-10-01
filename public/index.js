@@ -1,4 +1,5 @@
 console.log('js running');
+
 window.onload = () => {
   init();
   // load();
@@ -88,6 +89,7 @@ async function loadMemos() {
           // console.log(res);
           if (res.ok) {
             // memoDiv.querySelector('.count').innerHTML = memos[index].like.length;
+
             adminText.style.color = 'Black';
             handleSubmitNewMemo();
           } else {
@@ -138,7 +140,7 @@ async function loadMemos() {
         .addEventListener('click', async (event) => {
           // Do your fetch  logic here
 
-          const res = await fetch(`/admin/like/?id=${memos[index].id}`, {
+          const res = await fetch(`/memo/like/?id=${memos[index].id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
