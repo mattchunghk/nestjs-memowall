@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { KnexModule } from 'nest-knexjs/dist/knex.module';
 import { join } from 'path';
@@ -10,12 +10,14 @@ import { UsersService } from './users/users.service';
 import { MemosController } from './memos/memos.controller';
 import { MemosService } from './memos/memos.service';
 import { UsersController } from './users/users.controller';
-console.log(join(__dirname, '...', 'public'));
+import { isLoggedIn } from 'utils/isLoggedIn.middleware';
+import { EventsGateway } from './events.gateway';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join('/Users/mattchung/Documents/VSC/memo-wall/', 'public'),
+      rootPath: join(__dirname, '..', '..', 'public'),
     }),
     KnexModule.forRoot({
       config: {
@@ -31,6 +33,12 @@ console.log(join(__dirname, '...', 'public'));
     }),
   ],
   controllers: [AppController, UsersController, MemosController],
-  providers: [AppService, UsersService, MemosService],
+  providers: [AppService, UsersService, MemosService, EventsGateway],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(isLoggedIn).forRoutes('memo/memo-formidable');
+    consumer.apply(isLoggedIn).forRoutes('memo/delete/id');
+    consumer.apply(isLoggedIn).forRoutes('memo/update');
+  }
+}

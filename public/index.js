@@ -12,19 +12,27 @@ function init() {
   document.querySelector('#admin-form').addEventListener('submit', login);
   document.querySelector('#admin-logout').addEventListener('submit', logout);
 }
+const socket = io('http://localhost:3000/');
+function handleSubmitNewMemo() {
+  socket.emit('message');
+}
+
+// socket.on('message', () => {
+//   console.log('io is good');
+//   handleSubmitNewMemo(loadMemos());
+// });
 
 // const socket = io.connect();
-// socket.on('memoUpdated', () => {
-//   console.log('io good');
-//   loadMemos();
-// });
+socket.on('message', () => {
+  loadMemos();
+  console.log('io good');
+});
 
 async function loadMemos() {
   const res = await fetch('/memo'); // Fetch from the correct url
   const memos = await res.json();
   const memosContainer = document.querySelector('#memo-row');
   const adminText = document.querySelector('.admin-txt');
-  console.log(memos);
   if (res.ok) {
     memosContainer.innerHTML = '';
 
@@ -53,7 +61,7 @@ async function loadMemos() {
                 ${
                   memo.image == 'None'
                     ? ''
-                    : `<img class="photo-img" src="/${memo.image}" alt="memo-phot">`
+                    : `<img class="photo-img" src="/uploads/${memo.image}" alt="memo-phot">`
                 }
                 </div>
             </form>
@@ -71,7 +79,7 @@ async function loadMemos() {
         .querySelector('.trash')
         .addEventListener('click', async (event) => {
           // Do your fetch  logic here
-          const res = await fetch(`/admin/delete/id/${memos[index].id}`, {
+          const res = await fetch(`/memo/delete/id/${memos[index].id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -81,7 +89,7 @@ async function loadMemos() {
           if (res.ok) {
             // memoDiv.querySelector('.count').innerHTML = memos[index].like.length;
             adminText.style.color = 'Black';
-            loadMemos();
+            handleSubmitNewMemo();
           } else {
             adminText.innerHTML = `Please Login!`;
             adminText.style.color = 'Red';
@@ -101,7 +109,7 @@ async function loadMemos() {
           let text = memoDiv.querySelector('.memo-input').value;
           console.log(memos[index]);
           const res = await fetch(
-            `/admin/update/?id=${memos[index].id}&update=${text}`,
+            `/memo/update/?id=${memos[index].id}&update=${text}`,
             {
               method: 'PUT',
               headers: {
@@ -112,7 +120,7 @@ async function loadMemos() {
           // console.log(res);
           if (res.ok) {
             adminText.style.color = 'Black';
-            loadMemos();
+            handleSubmitNewMemo();
           } else {
             adminText.innerHTML = `Please Login!`;
             adminText.style.color = 'Red';
@@ -138,7 +146,7 @@ async function loadMemos() {
           });
           if (res.ok) {
             adminText.style.color = 'Black';
-            loadMemos();
+            handleSubmitNewMemo();
           } else {
             adminText.innerHTML = `Please Login!`;
             adminText.style.color = 'Red';
@@ -160,6 +168,7 @@ async function loadMemos() {
 
 async function submitMemoForm(event) {
   event.preventDefault();
+  const adminText = document.querySelector('.admin-txt');
 
   // Serialize the Form afterwards
   const form = event.target;
@@ -175,7 +184,14 @@ async function submitMemoForm(event) {
 
   if (res.ok) {
     document.querySelector('#memo-form').reset();
-    loadMemos();
+    handleSubmitNewMemo();
+  } else {
+    adminText.innerHTML = `Please Login`;
+    adminText.style.color = 'Red';
+    setTimeout(function () {
+      adminText.innerHTML = `Administration`;
+      adminText.style.color = 'Black';
+    }, 2000);
   }
 }
 
