@@ -12,13 +12,15 @@ import { MemosService } from './memos/memos.service';
 import { UsersController } from './users/users.controller';
 import { isLoggedIn } from 'utils/isLoggedIn.middleware';
 import { EventsGateway } from './events.gateway';
+import { config } from 'knexfile';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(config),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
     }),
+
     KnexModule.forRoot({
       config: {
         client: 'pg',
@@ -28,6 +30,15 @@ import { EventsGateway } from './events.gateway';
           user: process.env.DB_USERNAME,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_NAME,
+        },
+        pool: {
+          min: 2,
+          max: 10,
+        },
+        migrations: {
+          tableName: 'knex_migrations',
+          directory: 'src/migrations',
+          // tableName: 'knex_migrations',
         },
       },
     }),

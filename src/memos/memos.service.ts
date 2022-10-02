@@ -57,8 +57,10 @@ export class MemosService {
       .select('image')
       .from('memos')
       .where({ id: memoId });
+    if (img[0].image != 'None') {
+      deletedImg(img[0].image);
+    }
 
-    deletedImg(img[0].image);
     await this.knex('likes').where({ memo_id: memoId }).del();
     await this.knex('memos').where({ id: memoId }).del();
     return `memo#${memoId} delete successfully`;
