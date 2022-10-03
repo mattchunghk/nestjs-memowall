@@ -17,6 +17,7 @@ declare module 'express-session' {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const PORT = 3000;
 
   app.use(
     session({
@@ -25,7 +26,8 @@ async function bootstrap() {
       saveUninitialized: true,
     }),
   );
-  await app.listen(3000);
+  await app.listen(PORT);
+  console.log(`Listening at http://localhost:${PORT}/`);
 }
 bootstrap();
 

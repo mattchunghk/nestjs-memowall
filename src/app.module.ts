@@ -13,6 +13,8 @@ import { UsersController } from './users/users.controller';
 import { isLoggedIn } from 'utils/isLoggedIn.middleware';
 import { EventsGateway } from './events.gateway';
 import { config } from 'knexfile';
+import { UsersModule } from './users/users.module';
+import { MemosModule } from './memos/memos.module';
 
 @Module({
   imports: [
@@ -42,6 +44,10 @@ import { config } from 'knexfile';
         },
       },
     }),
+
+    UsersModule,
+
+    MemosModule,
   ],
   controllers: [AppController, UsersController, MemosController],
   providers: [AppService, UsersService, MemosService, EventsGateway],

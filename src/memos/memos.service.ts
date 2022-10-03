@@ -15,10 +15,11 @@ export class MemosService {
 
   async getMemos() {
     const memos = await this.knex
-      .select('*')
-      .from('memos')
-      .orderBy('created_at', 'desc');
-    return memos;
+      .raw(`select memos.*, count(likes.memo_id)as likes_num from memos
+    left JOIN likes on likes.memo_id = memos.id
+     GROUP BY memos.id  order by created_at DESC`);
+
+    return memos.rows;
   }
 
   async likeMemos(memoId: number, userId: number) {
@@ -33,14 +34,6 @@ export class MemosService {
         .where({ memo_id: memoId, user_id: userId })
         .del();
     }
-
-    const likeNum: any = await this.knex('likes')
-      .count('*')
-      .where({ memo_id: memoId });
-
-    await this.knex('memos')
-      .where({ id: memoId })
-      .update({ likes_num: likeNum[0].count });
 
     return `memo#${memoId} like successfully`;
   }
