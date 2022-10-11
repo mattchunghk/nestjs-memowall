@@ -9,7 +9,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { formParse } from 'utils/upload';
+import { formParse } from '../../utils/upload';
 import { MemosService } from './memos.service';
 import { Response, Request } from 'express';
 

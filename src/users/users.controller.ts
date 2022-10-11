@@ -1,6 +1,6 @@
 import { Controller, Post, Req, Res } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { checkPassword } from 'utils/hash';
+import { checkPassword } from '../../utils/hash';
 import { Response, Request } from 'express';
 
 @Controller('admin')

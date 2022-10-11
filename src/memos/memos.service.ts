@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectConnection } from 'nest-knexjs';
 
-import { deletedImg } from 'src/main';
+import { deletedImg } from '.././main';
 
 @Injectable()
 export class MemosService {

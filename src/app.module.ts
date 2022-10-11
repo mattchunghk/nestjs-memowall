@@ -22,7 +22,7 @@ import { MemosModule } from './memos/memos.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
     }),
-
+    // KnexModule.forRoot(knex),
     KnexModule.forRoot({
       config: {
         client: 'pg',
@@ -46,7 +46,6 @@ import { MemosModule } from './memos/memos.module';
     }),
 
     UsersModule,
-
     MemosModule,
   ],
   controllers: [AppController, UsersController, MemosController],

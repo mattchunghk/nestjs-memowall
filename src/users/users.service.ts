@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectConnection } from 'nest-knexjs';
-import { hashPassword } from 'utils/hash';
+import { hashPassword } from '../../utils/hash';
 
 @Injectable()
 export class UsersService {
@@ -22,5 +22,11 @@ export class UsersService {
       password: hashedPassword,
     });
     return 'users insert successfully';
+  }
+
+  async getUser() {
+    const users = await this.knex.select('*').from('users');
+
+    return users;
   }
 }
