@@ -3,5 +3,6 @@
         "memowall",
         "nestjs",
         "TESTDB"
-    ]
+    ],
+    "liveServer.settings.port": 5501
 }

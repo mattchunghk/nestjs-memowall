@@ -13,7 +13,7 @@ function init() {
   document.querySelector('#admin-form').addEventListener('submit', login);
   document.querySelector('#admin-logout').addEventListener('submit', logout);
 }
-const socket = io('http://localhost:3000/');
+const socket = io('https://mattchung.one/');
 function handleSubmitNewMemo() {
   socket.emit('message');
 }
